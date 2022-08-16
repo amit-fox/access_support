@@ -6,6 +6,8 @@ const { WebClient } = require("@slack/web-api");
 const { createEventAdapter } = require("@slack/events-api");
 const { request_info_template } = require("./templates/request-form-template");
 const { attachmentParser } = require('./utils/attachmentValuesParser');
+const {generateOutput}  = require('./utils/outputGenerator');
+
 
 require("dotenv").config({
   path: path.resolve(__dirname, "./test.env"),
@@ -70,41 +72,7 @@ slackInteractions.action({ type: "button" }, (payload, respond) => {
       await slackClient.chat.postMessage({
         channel: 'C03SYJ44292',
         text: `Hi :wave:`,
-        attachments: [
-          {
-            "color": "#f2c744",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "You have a new request"
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Name:*\n"+ submmittedData[0].value
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Role:*\n"+ submmittedData[1].value
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Env:*\n"+ submmittedData[2].value
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Approver:*\n"+ submmittedData[3].value
-                  },
-                ]
-              }
-            ]
-          }
-        ]
+        attachments: [generateOutput(submmittedData)]
       });
       respond({ text: "Processing complete.", replace_original: true });
       return { text: "Processing..." };
