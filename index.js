@@ -19,11 +19,11 @@ const app = express();
 const slackEvent = createEventAdapter(signInSecret);
 const slackInteractions = createMessageAdapter(signInSecret);
 const slackClient = new WebClient(slackToken);
-// app.use(express.json());
+
 
 app.use("/interactive-endpoint", slackInteractions.requestListener());
 app.use(slackEvent.requestListener());
-// app.use(bodyParser.json());
+
 // slack events specific
 slackEvent.on("app_mention", (evt) => {
   console.log("app mention >>", evt);
